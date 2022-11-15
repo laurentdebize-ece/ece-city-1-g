@@ -37,7 +37,7 @@ typedef struct{
     int Y,X;
     int ruines, terrainvague, cabane, maison, imleuble, gratteciel;
     int obstacle;
-    int carreChemin;
+    int routes;
 }Cases;
 
 typedef struct {

@@ -25,17 +25,17 @@ void dessinerLigne() {
     for (int i = 124; i < LO_FENETRE; i = i + (LO_FENETRE - 124) / 44) {
         al_draw_line(i, 0, i, (LA_FENETRE - 68), al_map_rgb(0, 0, 0), 1);
     }
-    for (int i = 0; i < LA_FENETRE - 68; i = i + (LA_FENETRE - 68) / 35) {
+    for (int i = 0; i < LA_FENETRE - 68; i = i + (LA_FENETRE - 68) / 34) {
         al_draw_line(124, i, LO_FENETRE, i, al_map_rgb(0, 0, 0), 1);
     }
 
 }
 
-void dessinerplateau(){
+void dessinerplateau(){// fonction similaire a dessinerligne
     for (int i = 0; i < 35; i++) {
         for (int j = 0; j < 45; j++){
             al_draw_rectangle(XDepart + (j*20), YDepart + (i*20), XDepart+ 20 + (j*20), YDepart + 20 + (i*20),
-                              al_map_rgb(0,0,0),2);
+                              al_map_rgb(255,255,255),2);
 
         }
     }
@@ -79,7 +79,7 @@ void affichagetimer(Fonts fonts,ALLEGRO_TIMER* timer2){
 void detectioncaseSouris(ALLEGRO_EVENT event, int *x1, int *y1, int *x2, int *y2) {
     for (int i = 0; i < 35; i++) {
         for (int j = 0; j < 45; j++) {
-            if (event.mouse.x >= XDepart + (j * 20) && event.mouse.x <= 1024 && event.mouse.y >= 0 && event.mouse.y <= 20 + (i * 20)) {
+            if (event.mouse.x >= XDepart + (j * 20) && event.mouse.x <= 1024 && event.mouse.y >= (i*20) && event.mouse.y <= 20 + (i * 20)) {
                 *x1 = XDepart + (j * 20);
                 *x2 = XDepart + 20 + (j * 20);
                 *y1 = (i * 20);

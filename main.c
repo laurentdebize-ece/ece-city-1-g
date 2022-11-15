@@ -18,6 +18,7 @@ int main() {
     int x2 = 0;
     int y1 = 0;
     int y2 = 0;
+    int etage=0;
 
 
     bool fin = false;
@@ -31,9 +32,11 @@ int main() {
 
     ALLEGRO_BITMAP *imagemenu;
     ALLEGRO_BITMAP *imagefond;
-    ALLEGRO_BITMAP *imageflechehaut;
-    ALLEGRO_BITMAP *imageflechebas;
-
+    ALLEGRO_BITMAP *imageville;
+    ALLEGRO_BITMAP *imageeau;
+    ALLEGRO_BITMAP *imageelec;
+    ALLEGRO_BITMAP *imageRoutes;
+    ALLEGRO_BITMAP *imageRoutes40x40;
     Fonts fonts;
     bool Souris = false;
 
@@ -77,11 +80,15 @@ int main() {
 
     imagemenu = al_load_bitmap("../images/menusimcity.png");
     imagefond = al_load_bitmap("../images/fond.png");
-    imageflechehaut = al_load_bitmap("../images/flechehaut.png");
-    imageflechebas = al_load_bitmap("../images/flechebas.png");
+    imageville = al_load_bitmap("../images/ville.png");
+    imageeau = al_load_bitmap("../images/eau.png");
+    imageelec= al_load_bitmap("../images/elec.png");
+    imageRoutes= al_load_bitmap("../images/textureRoutes.jpg");
+    imageRoutes40x40= al_load_bitmap("../images/textureRoutes40x40.jpg");
+
     Maire maire;
 
-
+    inisitialisationcases(cases );
     initialisationresource(&maire);
 
     al_start_timer(timer2);
@@ -109,14 +116,12 @@ int main() {
             case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
                 Souris = true;
                 if (etatdebut || etatregles) {
-                    choixDebut(event.mouse.x, event.mouse.y, &etatdebut, &etatregles, timer2);
-
-                    if ((!(etatdebut) && (!etatregles))) {
-                        choixfleches(event.mouse.x, event.mouse.y, &etage0, &etage_1, &etage_2);
-                    }
+                    choixDebut(event.mouse.x, event.mouse.y, &etatdebut, &etatregles, timer2);}
+                    choixBoutons(event,x1,x2,y1,y2,imageRoutes);
+                    changementetage(event,&etage0,&etage_1,&etage_2,etage);
 
 
-                } break;
+                break;
 
             case ALLEGRO_EVENT_MOUSE_AXES :
 
@@ -125,9 +130,8 @@ int main() {
                 break;
             case ALLEGRO_EVENT_TIMER :
 
-                choixfleches(event.mouse.x, event.mouse.y, &etage0, &etage_1, &etage_2);
-                dessinerTout(&etatdebut, imagemenu, fonts, timer2, &etatregles, &maire, imagefond, imageflechehaut,
-                             imageflechebas, &etage0, &etage_1, &etage_2, x1, x2, y1, y2);
+                dessinerTout(&etatdebut, imagemenu, fonts, timer2, &etatregles, &maire, imagefond, imageville,
+                             imageeau, &etage0, &etage_1, &etage_2, x1, x2, y1, y2,imageRoutes40x40,event,imageRoutes,etage,imageelec);
 
 
                 break;
