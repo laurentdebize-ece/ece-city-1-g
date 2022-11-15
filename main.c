@@ -1,0 +1,140 @@
+#include <stdio.h>
+#include "plateau.h"
+#include "menu.h"
+#include "JEU.h"
+#include <allegro5/allegro.h>
+#include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_image.h>
+#include <time.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
+
+int main() {
+
+    bool etage0 = true;
+    bool etage_1 = false;
+    bool etage_2 = false;
+    int x1 = 0;
+    int x2 = 0;
+    int y1 = 0;
+    int y2 = 0;
+
+
+    bool fin = false;
+    bool etatdebut = true;
+    bool etatregles = true;
+    bool etatmenu = true;
+    ALLEGRO_DISPLAY *display = NULL;
+    ALLEGRO_EVENT_QUEUE *queue = NULL;
+    ALLEGRO_TIMER *timer1 = NULL;
+    ALLEGRO_TIMER *timer2 = NULL;
+
+    ALLEGRO_BITMAP *imagemenu;
+    ALLEGRO_BITMAP *imagefond;
+    ALLEGRO_BITMAP *imageflechehaut;
+    ALLEGRO_BITMAP *imageflechebas;
+
+    Fonts fonts;
+    bool Souris = false;
+
+    srand(time(NULL));
+    assert(al_init());
+    al_init_font_addon();
+    assert(al_init_ttf_addon());
+    assert(al_init_image_addon());
+    assert(al_install_keyboard());
+    assert(al_install_mouse());
+    assert(al_init_primitives_addon());
+
+
+    display = al_create_display(LO_FENETRE, LA_FENETRE);
+    al_set_window_position(display, 0, 0);
+
+    assert(display != NULL);
+    timer1 = al_create_timer(0.01);
+    assert(timer1 != NULL);
+
+    timer2 = al_create_timer(1);
+    assert(timer2 != NULL);
+
+
+    queue = al_create_event_queue();
+    assert(queue != NULL);
+    Cases cases[45][35] = {0};
+    fonts.font = al_load_ttf_font("../Fonts/police.ttf", 45, 0);
+
+    fonts.font2 = al_load_ttf_font("../Fonts/police.ttf", 15, 0);
+    fonts.font3 = al_load_ttf_font("../Fonts/police.ttf", 30, 0);
+    fonts.font4 = al_load_ttf_font("../Fonts/police.ttf", 20, 0);
+
+    al_set_window_title(display, "Bienvenue sur ECE City");
+
+    al_register_event_source(queue, al_get_keyboard_event_source());
+    al_register_event_source(queue, al_get_mouse_event_source());
+    al_register_event_source(queue, al_get_display_event_source(display));
+    al_register_event_source(queue, al_get_timer_event_source(timer1));
+    al_register_event_source(queue, al_get_timer_event_source(timer2));
+
+    imagemenu = al_load_bitmap("../images/menusimcity.png");
+    imagefond = al_load_bitmap("../images/fond.png");
+    imageflechehaut = al_load_bitmap("../images/flechehaut.png");
+    imageflechebas = al_load_bitmap("../images/flechebas.png");
+    Maire maire;
+
+
+    initialisationresource(&maire);
+
+    al_start_timer(timer2);
+    al_start_timer(timer1);
+    while (!fin) {
+
+        ALLEGRO_EVENT event = {0};
+
+        al_wait_for_event(queue, &event);
+        switch (event.type) {
+            case ALLEGRO_EVENT_DISPLAY_CLOSE:
+                fin = true;
+                break;
+
+            case ALLEGRO_EVENT_KEY_DOWN :
+                switch (event.keyboard.keycode) {
+                    case ALLEGRO_KEY_ESCAPE:
+
+
+                        break;
+                }
+                break;
+
+
+            case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
+                Souris = true;
+                if (etatdebut || etatregles) {
+                    choixDebut(event.mouse.x, event.mouse.y, &etatdebut, &etatregles, timer2);
+
+                    if ((!(etatdebut) && (!etatregles))) {
+                        choixfleches(event.mouse.x, event.mouse.y, &etage0, &etage_1, &etage_2);
+                    }
+
+
+                } break;
+
+            case ALLEGRO_EVENT_MOUSE_AXES :
+
+                detectioncaseSouris(event, &x1, &y1, &x2, &y2);
+
+                break;
+            case ALLEGRO_EVENT_TIMER :
+
+                choixfleches(event.mouse.x, event.mouse.y, &etage0, &etage_1, &etage_2);
+                dessinerTout(&etatdebut, imagemenu, fonts, timer2, &etatregles, &maire, imagefond, imageflechehaut,
+                             imageflechebas, &etage0, &etage_1, &etage_2, x1, x2, y1, y2);
+
+
+                break;
+        }
+    }
+
+
+    return 0;
+
+}
