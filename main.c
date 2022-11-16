@@ -137,6 +137,7 @@ int main() {
                     choixDebut(event.mouse.x, event.mouse.y, &etatdebut, &etatregles, timer2);}
                     choixBoutons(event,x1,x2,y1,y2,imageRoutes,&etage0,&etage_1,&etage_2);
                     changementetage(event,&etage0,&etage_1,&etage_2,etage);
+                    detectionboutons(event,&curseur,&routes,&habitations,&centrale,&chateaudeau);
 
 
                 break;
@@ -144,12 +145,14 @@ int main() {
             case ALLEGRO_EVENT_MOUSE_AXES :
 
                 detectioncaseSouris(event, &x1, &y1, &x2, &y2);
+                definirRoutes(event,routes,cases,maire);
 
                 break;
             case ALLEGRO_EVENT_TIMER :
 
                 dessinerTout(&etatdebut, imagemenu, fonts, timer2, &etatregles, &maire, imagefond, imageville,
-                             imageeau, &etage0, &etage_1, &etage_2, x1, x2, y1, y2,imageRoutes40x40,event,imageRoutes,etage,imageelec,imageMaison,imageCentrale,imageChateaudeau,imagecurseur);
+                             imageeau, &etage0, &etage_1, &etage_2, x1, x2, y1, y2, imageRoutes40x40, event,
+                             imageRoutes, etage, imageelec, imageMaison, imageCentrale, imageChateaudeau, imagecurseur,cases);
 
 
                 break;

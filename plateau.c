@@ -49,7 +49,7 @@ void inisitialisationcases(Cases cases[45][35]){
             cases[i][j].terrainvague=0;
             cases[i][j].cabane=0;
             cases[i][j].maison=0;
-            cases[i][j].imleuble=0;
+            cases[i][j].immeuble=0;
             cases[i][j].gratteciel=0;
 
         }

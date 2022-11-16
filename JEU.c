@@ -9,9 +9,12 @@
 #include "stdio.h"
 
 
-
-
-void dessinerTout(bool * etatdebut,ALLEGRO_BITMAP * imagemenu, Fonts fonts,ALLEGRO_TIMER* timer2, bool* etatregle,Maire* maire, ALLEGRO_BITMAP* imagefond, ALLEGRO_BITMAP* imageville,ALLEGRO_BITMAP* imageeau,bool* etage0,bool* etage_1,bool* etage_2,int x1,int x2,int y1,int y2, ALLEGRO_BITMAP*imageRoutes40x40,ALLEGRO_EVENT event, ALLEGRO_BITMAP*imageRoutes,int etage, ALLEGRO_BITMAP* imageelec, ALLEGRO_BITMAP* imageMaison, ALLEGRO_BITMAP* imageCentrale,ALLEGRO_BITMAP* imageChateaudeau,ALLEGRO_BITMAP* imagecurseur ) {
+void dessinerTout(bool *etatdebut, ALLEGRO_BITMAP *imagemenu, Fonts fonts, ALLEGRO_TIMER *timer2, bool *etatregle,
+                  Maire *maire, ALLEGRO_BITMAP *imagefond, ALLEGRO_BITMAP *imageville, ALLEGRO_BITMAP *imageeau,
+                  bool *etage0, bool *etage_1, bool *etage_2, int x1, int x2, int y1, int y2,
+                  ALLEGRO_BITMAP *imageRoutes40x40, ALLEGRO_EVENT event, ALLEGRO_BITMAP *imageRoutes, int etage,
+                  ALLEGRO_BITMAP *imageelec, ALLEGRO_BITMAP *imageMaison, ALLEGRO_BITMAP *imageCentrale,
+                  ALLEGRO_BITMAP *imageChateaudeau, ALLEGRO_BITMAP *imagecurseur, Cases cases[45][35]) {
     al_clear_to_color(al_map_rgb(0, 0, 0));
 
     if (*etatdebut) {
@@ -41,7 +44,7 @@ void dessinerTout(bool * etatdebut,ALLEGRO_BITMAP * imagemenu, Fonts fonts,ALLEG
         dessinerLigne();
         dessinerBoutons(fonts,imageville,imageeau,imageRoutes40x40,imageelec,imageMaison,imageCentrale,imageChateaudeau,imagecurseur);
         choixBoutons(event,x1,x2,y1,y2,imageRoutes,etage0,etage_1,etage_2);
-
+        affichageroute(cases,imageRoutes);
 
 
 
@@ -139,6 +142,7 @@ void detectionboutons(ALLEGRO_EVENT event,bool* curseur,bool* routes,bool* habit
         *habitations=false;
         *centrales=false;
         *chateaudeau=false;
+        al_draw_filled_rectangle(0,0, 1024,50, al_map_rgb(0,0,0));
 
     }
     if(event.mouse.x>4 &&event.mouse.x<60 &&event.mouse.y>524 &&event.mouse.y<570){// bouton maison
@@ -166,6 +170,25 @@ void detectionboutons(ALLEGRO_EVENT event,bool* curseur,bool* routes,bool* habit
     }
 }
 
+void definirRoutes(ALLEGRO_EVENT event, bool routes, Cases cases[45][35], Maire maire) {
+    for (int i = 0; i < 45; i++) {
+        for (int j = 0; j < 35; ++j) {
+            if (event.mouse.x >= 124 + (j * 20) && event.mouse.x <= 20 + (j * 20) && event.mouse.y >= (i * 20) &&
+                event.mouse.y <= 20 + (i * 20)) {
+                if ((routes == true && cases[i][j].routes == 0 && cases[i][j].maison == 0 && cases[i][j].cabane == 0 &&
+                     cases[i][j].immeuble == 0 && cases[i][j].gratteciel == 0 && cases[i][j].centrale == 0 &&
+                     cases[i][j].chateaudeau == 0)) {
+
+                    cases[i][j].routes=1;
+                    maire.argent-=10;
+
+                }
+            }
+
+        }
+
+    }
+}
 
 void affichageroute(Cases cases[45][35],ALLEGRO_BITMAP* imagesroute){
     for (int i = 0; i < 45; i++) {
