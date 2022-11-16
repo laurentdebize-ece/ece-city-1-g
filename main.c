@@ -20,6 +20,12 @@ int main() {
     int y2 = 0;
     int etage=0;
 
+    bool curseur=true;
+    bool routes=false;
+    bool habitations=false;
+    bool centrale=false;
+    bool chateaudeau=false;
+
 
     bool fin = false;
     bool etatdebut = true;
@@ -37,6 +43,14 @@ int main() {
     ALLEGRO_BITMAP *imageelec;
     ALLEGRO_BITMAP *imageRoutes;
     ALLEGRO_BITMAP *imageRoutes40x40;
+    ALLEGRO_BITMAP *imageChateaudeau;
+    ALLEGRO_BITMAP *imageCentrale;
+    ALLEGRO_BITMAP *imageMaison;
+    ALLEGRO_BITMAP *imagecurseur;
+
+
+
+
     Fonts fonts;
     bool Souris = false;
 
@@ -85,6 +99,10 @@ int main() {
     imageelec= al_load_bitmap("../images/elec.png");
     imageRoutes= al_load_bitmap("../images/textureRoutes.jpg");
     imageRoutes40x40= al_load_bitmap("../images/textureRoutes40x40.jpg");
+    imageMaison= al_load_bitmap("../images/maison.png");
+    imageCentrale= al_load_bitmap("../images/centrale.png");
+    imageChateaudeau= al_load_bitmap("../images/chateau.png");
+    imagecurseur= al_load_bitmap("../images/curseur.png");
 
     Maire maire;
 
@@ -117,7 +135,7 @@ int main() {
                 Souris = true;
                 if (etatdebut || etatregles) {
                     choixDebut(event.mouse.x, event.mouse.y, &etatdebut, &etatregles, timer2);}
-                    choixBoutons(event,x1,x2,y1,y2,imageRoutes);
+                    choixBoutons(event,x1,x2,y1,y2,imageRoutes,&etage0,&etage_1,&etage_2);
                     changementetage(event,&etage0,&etage_1,&etage_2,etage);
 
 
@@ -131,7 +149,7 @@ int main() {
             case ALLEGRO_EVENT_TIMER :
 
                 dessinerTout(&etatdebut, imagemenu, fonts, timer2, &etatregles, &maire, imagefond, imageville,
-                             imageeau, &etage0, &etage_1, &etage_2, x1, x2, y1, y2,imageRoutes40x40,event,imageRoutes,etage,imageelec);
+                             imageeau, &etage0, &etage_1, &etage_2, x1, x2, y1, y2,imageRoutes40x40,event,imageRoutes,etage,imageelec,imageMaison,imageCentrale,imageChateaudeau,imagecurseur);
 
 
                 break;
