@@ -5,7 +5,8 @@
 #ifndef ECE_CITY_1_G1_PLATEAU_H
 #define ECE_CITY_1_G1_PLATEAU_H
 
-
+#define XDepart 124
+#define YDepart 0
 
 #include "menu.h"
 
@@ -16,4 +17,6 @@ void inisitialisationcases(Cases cases[45][35]);
 void affichagetimer(Fonts fonts,ALLEGRO_TIMER* timer2);
 
 void detectioncaseSouris(ALLEGRO_EVENT event, int* x1, int* y1, int* x2, int* y2);
+void affichageElmentSouris(ALLEGRO_EVENT event, int x1, int y1, int x2, int y2, bool curseur, bool routes, ALLEGRO_BITMAP* imageroutes);
+
 #endif //ECE_CITY_1_G1_PLATEAU_H

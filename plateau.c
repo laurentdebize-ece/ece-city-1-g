@@ -15,8 +15,7 @@
 #include <allegro5/allegro_ttf.h>
 
 #define LASTART 124
-#define XDepart 124
-#define YDepart 0
+
 
 //124 longueur bonus
 // 68 largeur bonus
@@ -35,7 +34,7 @@ void dessinerplateau(){// fonction similaire a dessinerligne
     for (int i = 0; i < 35; i++) {
         for (int j = 0; j < 45; j++){
             al_draw_rectangle(XDepart + (j*20), YDepart + (i*20), XDepart+ 20 + (j*20), YDepart + 20 + (i*20),
-                              al_map_rgb(255,255,255),2);
+                              al_map_rgb(100,100,100),1);
 
         }
     }
@@ -51,6 +50,7 @@ void inisitialisationcases(Cases cases[45][35]){
             cases[i][j].maison=0;
             cases[i][j].immeuble=0;
             cases[i][j].gratteciel=0;
+            cases[i][j].routes=0;
 
         }
 
@@ -79,6 +79,7 @@ void affichagetimer(Fonts fonts,ALLEGRO_TIMER* timer2){
 void detectioncaseSouris(ALLEGRO_EVENT event, int *x1, int *y1, int *x2, int *y2) {
     for (int i = 0; i < 35; i++) {
         for (int j = 0; j < 45; j++) {
+
             if (event.mouse.x >= XDepart + (j * 20) && event.mouse.x <= 1024 && event.mouse.y >= (i*20) && event.mouse.y <= 20 + (i * 20)) {
                 *x1 = XDepart + (j * 20);
                 *x2 = XDepart + 20 + (j * 20);
@@ -96,4 +97,18 @@ void detectioncaseSouris(ALLEGRO_EVENT event, int *x1, int *y1, int *x2, int *y2
         *y1 = 10000000;
         *y2 = 10000000;
     }
+}
+
+
+
+void affichageElmentSouris(ALLEGRO_EVENT event, int x1, int y1, int x2, int y2, bool curseur, bool routes, ALLEGRO_BITMAP* imageroutes){
+    if(curseur==true){
+
+    }
+    if(routes==true){
+
+    }
+
+
+
 }

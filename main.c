@@ -19,12 +19,13 @@ int main() {
     int y1 = 0;
     int y2 = 0;
     int etage=0;
+    int bouton=0;
 
-    bool curseur=true;
-    bool routes=false;
-    bool habitations=false;
-    bool centrale=false;
-    bool chateaudeau=false;
+    bool curseur=1;
+    bool routes=0;
+    bool habitations=0;
+    bool centrale=0;
+    bool chateaudeau=0;
 
 
     bool fin = false;
@@ -135,9 +136,10 @@ int main() {
                 Souris = true;
                 if (etatdebut || etatregles) {
                     choixDebut(event.mouse.x, event.mouse.y, &etatdebut, &etatregles, timer2);}
-                    choixBoutons(event,x1,x2,y1,y2,imageRoutes,&etage0,&etage_1,&etage_2);
                     changementetage(event,&etage0,&etage_1,&etage_2,etage);
-                    detectionboutons(event,&curseur,&routes,&habitations,&centrale,&chateaudeau);
+                    detectionboutons(event,&curseur,&routes,&habitations,&centrale,&chateaudeau,bouton);
+                    definirRoutes(event,routes,cases,maire);
+
 
 
                 break;
@@ -145,14 +147,15 @@ int main() {
             case ALLEGRO_EVENT_MOUSE_AXES :
 
                 detectioncaseSouris(event, &x1, &y1, &x2, &y2);
-                definirRoutes(event,routes,cases,maire);
+
+
 
                 break;
             case ALLEGRO_EVENT_TIMER :
 
                 dessinerTout(&etatdebut, imagemenu, fonts, timer2, &etatregles, &maire, imagefond, imageville,
                              imageeau, &etage0, &etage_1, &etage_2, x1, x2, y1, y2, imageRoutes40x40, event,
-                             imageRoutes, etage, imageelec, imageMaison, imageCentrale, imageChateaudeau, imagecurseur,cases);
+                             imageRoutes, etage, imageelec, imageMaison, imageCentrale, imageChateaudeau, imagecurseur,cases,&curseur,&routes,imageRoutes);
 
 
                 break;

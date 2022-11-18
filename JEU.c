@@ -14,7 +14,7 @@ void dessinerTout(bool *etatdebut, ALLEGRO_BITMAP *imagemenu, Fonts fonts, ALLEG
                   bool *etage0, bool *etage_1, bool *etage_2, int x1, int x2, int y1, int y2,
                   ALLEGRO_BITMAP *imageRoutes40x40, ALLEGRO_EVENT event, ALLEGRO_BITMAP *imageRoutes, int etage,
                   ALLEGRO_BITMAP *imageelec, ALLEGRO_BITMAP *imageMaison, ALLEGRO_BITMAP *imageCentrale,
-                  ALLEGRO_BITMAP *imageChateaudeau, ALLEGRO_BITMAP *imagecurseur, Cases cases[45][35]) {
+                  ALLEGRO_BITMAP *imageChateaudeau, ALLEGRO_BITMAP *imagecurseur, Cases cases[45][35],bool* curseur, bool* routes,ALLEGRO_BITMAP* imageroutes) {
     al_clear_to_color(al_map_rgb(0, 0, 0));
 
     if (*etatdebut) {
@@ -22,10 +22,27 @@ void dessinerTout(bool *etatdebut, ALLEGRO_BITMAP *imagemenu, Fonts fonts, ALLEG
     } else if (*etatregle) {
         regles(fonts);
     } else {
-        al_clear_to_color(al_map_rgb(150,255,0));
+        al_clear_to_color(al_map_rgb(0,100,140));
         if(*etage0){ // horizon etage niveau 0
 
             dessinerfond(imagefond);
+
+            if(*curseur){
+                al_draw_filled_rectangle( x1, y1, x2, y2, al_map_rgb(0,0,0));
+            }
+            if(*routes){
+                al_draw_bitmap(imageroutes,x1,y1,0);
+                affichageroute(cases,imageRoutes);
+
+            }
+
+
+
+            dessinerLigne();
+
+
+
+
         }
         else if(*etage_1){ // niveau -1
             al_draw_filled_rectangle(124,0,1024,700,al_map_rgb(0,0,0));
@@ -33,7 +50,8 @@ void dessinerTout(bool *etatdebut, ALLEGRO_BITMAP *imagemenu, Fonts fonts, ALLEG
         }
 
         else { // niveau-2
-            al_draw_filled_rectangle(124,0,1024,700,al_map_rgb(255,255,255));
+            al_draw_filled_rectangle(124,0,1024,700,al_map_rgb(0,0,50));
+            dessinerplateau();
 
 
         }
@@ -41,10 +59,10 @@ void dessinerTout(bool *etatdebut, ALLEGRO_BITMAP *imagemenu, Fonts fonts, ALLEG
         affichageressources(maire,fonts);
         affichagetimer(fonts,timer2);
 
-        dessinerLigne();
+
         dessinerBoutons(fonts,imageville,imageeau,imageRoutes40x40,imageelec,imageMaison,imageCentrale,imageChateaudeau,imagecurseur);
-        choixBoutons(event,x1,x2,y1,y2,imageRoutes,etage0,etage_1,etage_2);
-        affichageroute(cases,imageRoutes);
+
+
 
 
 
@@ -71,21 +89,6 @@ void affichageressources(Maire* maire, Fonts fonts){
 }
 
 
-
-
-void choixBoutons(ALLEGRO_EVENT event,int x1,int x2,int y1,int y2,ALLEGRO_BITMAP* imageRoutes, bool* etage0,bool* etage_1,bool* etage_2) {
-    //bouton route
-    // il faut : un if pour savoir si il y a une maison ? si oui pas de routes
-    if ((event.mouse.x > 10 && event.mouse.x < 50) && (event.mouse.y > 360 && event.mouse.y < 400)) {
-        al_draw_bitmap(imageRoutes, x1, y1, 0);
-    } else {
-        if (*etage0) { al_draw_filled_rectangle(x1, y1, x2, y2, al_map_rgb(0, 0, 0)); }
-        if (*etage_1) { al_draw_filled_rectangle(x1, y1, x2, y2, al_map_rgb(255, 255, 255)); }
-        if (*etage_2) { al_draw_filled_rectangle(x1, y1, x2, y2, al_map_rgb(0, 0, 0)); }
-    }
-
-
-}
 
 void dessinerBoutons(Fonts fonts,ALLEGRO_BITMAP* imageville,ALLEGRO_BITMAP* imageeau,ALLEGRO_BITMAP* imageRoutes40x40, ALLEGRO_BITMAP* imageelec,ALLEGRO_BITMAP* imageMaison,ALLEGRO_BITMAP* imageCentrale, ALLEGRO_BITMAP* imageChateaudeau, ALLEGRO_BITMAP* imagecurseur){
     al_draw_bitmap(imageville,10,210,0);
@@ -127,57 +130,64 @@ void changementetage(ALLEGRO_EVENT event,bool* etage0,bool* etage_1,bool* etage_
     if(etage==-2){*etage0=false;*etage_1=false;*etage_2=true;}
 
 }
-void detectionboutons(ALLEGRO_EVENT event,bool* curseur,bool* routes,bool* habitations,bool*centrales,bool*chateaudeau){
+void detectionboutons(ALLEGRO_EVENT event,bool* curseur,bool* routes,bool* habitations,bool*centrales,bool*chateaudeau,int bouton){
 
     if(event.mouse.x>0 && event.mouse.x<40 && event.mouse.y>430 &&event.mouse.y<470){//bouton curseur
-        *curseur=true;
-        *routes=false;
-        *habitations=false;
-        *centrales=false;
-        *chateaudeau=false;
+        bouton=0;
+
     }
-    if(event.mouse.x>5 && event.mouse.x<45 && event.mouse.y>470 &&event.mouse.y<510){//bouton routes
-        *routes=true;
-        *curseur=false;
-        *habitations=false;
-        *centrales=false;
-        *chateaudeau=false;
-        al_draw_filled_rectangle(0,0, 1024,50, al_map_rgb(0,0,0));
+    if(event.mouse.x>0 && event.mouse.x<60 && event.mouse.y>470 &&event.mouse.y<510){//bouton routes
+        bouton=1;
 
     }
     if(event.mouse.x>4 &&event.mouse.x<60 &&event.mouse.y>524 &&event.mouse.y<570){// bouton maison
-        *habitations=true;
-        *curseur=false;
-        *routes=false;
-        *centrales=false;
-        *chateaudeau=false;
+        bouton=2;
 
     }
     if(event.mouse.x>5 &&event.mouse.x< 45 &&event.mouse.y>570 &&event.mouse.y<615){//bouton centrale
-        *centrales=true;
-        *curseur=false;
-        *routes=false;
-        *habitations=false;
-        *chateaudeau=false;
+        bouton=3;
 
     }
     if(event.mouse.x>0 &&event.mouse.x< 40 &&event.mouse.y>620 &&event.mouse.y<670){//bouton Chateaudeau
-        *chateaudeau=true;
-        *curseur=false;
+        bouton=4;
+
+    }
+    if(bouton==0){*curseur=true;
         *routes=false;
         *habitations=false;
         *centrales=false;
-    }
+        *chateaudeau=false;}
+    if(bouton==1){*routes=true;
+        *curseur=false;
+        *habitations=false;
+        *centrales=false;
+        *chateaudeau=false;}
+    if(bouton==2){      *habitations=true;
+        *curseur=false;
+        *routes=false;
+        *centrales=false;
+        *chateaudeau=false;}
+    if(bouton==3){ *centrales=true;
+        *curseur=false;
+        *routes=false;
+        *habitations=false;
+        *chateaudeau=false;}
+    if(bouton==4){ *chateaudeau=true;
+        *curseur=false;
+        *routes=false;
+        *habitations=false;
+        *centrales=false;}
+
 }
 
-void definirRoutes(ALLEGRO_EVENT event, bool routes, Cases cases[45][35], Maire maire) {
-    for (int i = 0; i < 45; i++) {
+void definirRoutes(ALLEGRO_EVENT event,bool routes, Cases cases[45][35], Maire maire) {
+    for (int i = 0; i < 45; ++i) {
         for (int j = 0; j < 35; ++j) {
             if (event.mouse.x >= 124 + (j * 20) && event.mouse.x <= 20 + (j * 20) && event.mouse.y >= (i * 20) &&
                 event.mouse.y <= 20 + (i * 20)) {
-                if ((routes == true && cases[i][j].routes == 0 && cases[i][j].maison == 0 && cases[i][j].cabane == 0 &&
+                if (routes == true && cases[i][j].routes == 0 && cases[i][j].maison == 0 && cases[i][j].cabane == 0 &&
                      cases[i][j].immeuble == 0 && cases[i][j].gratteciel == 0 && cases[i][j].centrale == 0 &&
-                     cases[i][j].chateaudeau == 0)) {
+                     cases[i][j].chateaudeau == 0) {
 
                     cases[i][j].routes=1;
                     maire.argent-=10;
@@ -188,13 +198,15 @@ void definirRoutes(ALLEGRO_EVENT event, bool routes, Cases cases[45][35], Maire 
         }
 
     }
+
 }
 
 void affichageroute(Cases cases[45][35],ALLEGRO_BITMAP* imagesroute){
     for (int i = 0; i < 45; i++) {
         for (int j = 0; j < 35; j++) {
             if(cases[i][j].routes==1){
-                al_draw_bitmap(imagesroute,124+(j*20),(i*20),0);
+                al_draw_bitmap(imagesroute,XDepart+(j*20),0+(i*20),0);
+                al_flip_display();
             }
 
         }
