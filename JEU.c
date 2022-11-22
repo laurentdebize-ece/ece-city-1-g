@@ -14,14 +14,15 @@ void dessinerTout(bool *etatdebut, ALLEGRO_BITMAP *imagemenu, Fonts fonts, ALLEG
                   bool *etage0, bool *etage_1, bool *etage_2, int x1, int x2, int y1, int y2,
                   ALLEGRO_BITMAP *imageRoutes40x40, ALLEGRO_EVENT event, ALLEGRO_BITMAP *imageRoutes, int etage,
                   ALLEGRO_BITMAP *imageelec, ALLEGRO_BITMAP *imageMaison, ALLEGRO_BITMAP *imageCentrale,
-                  ALLEGRO_BITMAP *imageChateaudeau, ALLEGRO_BITMAP *imagecurseur, Cases cases[45][35],bool* curseur, bool* routes,ALLEGRO_BITMAP* imageroutes) {
+                  ALLEGRO_BITMAP *imageChateaudeau, ALLEGRO_BITMAP *imagecurseur, Cases cases[35][45],bool* curseur, bool* routes,ALLEGRO_BITMAP* imageroutes,bool* jeu
+        ,ALLEGRO_BITMAP* imagemaisonplateau,bool* habitations) {
     al_clear_to_color(al_map_rgb(0, 0, 0));
 
     if (*etatdebut) {
         dessinerMenu(imagemenu, fonts, timer2);
     } else if (*etatregle) {
         regles(fonts);
-    } else {
+    } else  {
         al_clear_to_color(al_map_rgb(0,100,140));
         if(*etage0){ // horizon etage niveau 0
 
@@ -32,26 +33,36 @@ void dessinerTout(bool *etatdebut, ALLEGRO_BITMAP *imagemenu, Fonts fonts, ALLEG
             }
             if(*routes){
                 al_draw_bitmap(imageroutes,x1,y1,0);
-                affichageroute(cases,imageRoutes);
+
+
+            }
+            if(*habitations){
+                al_draw_bitmap(imagemaisonplateau,x1,y1,0);
+                affichageMaison(cases,imagemaisonplateau);
 
             }
 
-
-
             dessinerLigne();
+            affichageroute(cases,imageRoutes);
+            affichageMaison(cases,imagemaisonplateau);
+
 
 
 
 
         }
-        else if(*etage_1){ // niveau -1
+        else if(*etage_1){// niveau -1
+            if(*curseur){
             al_draw_filled_rectangle(124,0,1024,700,al_map_rgb(0,0,0));
-            dessinerplateau();
+            al_draw_filled_rectangle( x1, y1, x2, y2, al_map_rgb(150,150,150));
+            dessinerplateau();}
         }
 
         else { // niveau-2
+            if(*curseur){
             al_draw_filled_rectangle(124,0,1024,700,al_map_rgb(0,0,50));
-            dessinerplateau();
+            al_draw_filled_rectangle( x1, y1, x2, y2, al_map_rgb(150,150,150));
+            dessinerplateau();}
 
 
         }
@@ -69,7 +80,7 @@ void dessinerTout(bool *etatdebut, ALLEGRO_BITMAP *imagemenu, Fonts fonts, ALLEG
 
     }
 
-    al_flip_display();
+
 }
 void initialisationresource(Maire* maire){
     maire->argent=500000;
@@ -180,33 +191,99 @@ void detectionboutons(ALLEGRO_EVENT event,bool* curseur,bool* routes,bool* habit
 
 }
 
-void definirRoutes(ALLEGRO_EVENT event,bool routes, Cases cases[45][35], Maire maire) {
-    for (int i = 0; i < 45; ++i) {
-        for (int j = 0; j < 35; ++j) {
-            if (event.mouse.x >= 124 + (j * 20) && event.mouse.x <= 20 + (j * 20) && event.mouse.y >= (i * 20) &&
-                event.mouse.y <= 20 + (i * 20)) {
-                if (routes == true && cases[i][j].routes == 0 && cases[i][j].maison == 0 && cases[i][j].cabane == 0 &&
-                     cases[i][j].immeuble == 0 && cases[i][j].gratteciel == 0 && cases[i][j].centrale == 0 &&
-                     cases[i][j].chateaudeau == 0) {
+void definirRoutes(ALLEGRO_EVENT event,bool* routes, Cases cases[35][45], Maire* maire) {
 
-                    cases[i][j].routes=1;
-                    maire.argent-=10;
+    for (int i = 0; i < 35; ++i) {
+        for (int j = 0; j < 45; ++j) {
+
+
+
+            if (event.mouse.x >= XDepart + (j * 20) && event.mouse.x <= XDepart+20+(j*20) && event.mouse.y >= (i * 20) &&
+                event.mouse.y <= 20 + (i * 20)) {
+
+
+
+
+
+
+                if ( cases[i][j].routes == 0 && cases[i][j].maison == 0 &&
+                    cases[i][j].cabane == 0 && cases[i][j].immeuble == 0 && cases[i][j].gratteciel == 0 &&
+                    cases[i][j].centrale == 0 && cases[i][j].chateaudeau == 0) {
+
+                    cases[i][j].routes = 1;
+                    maire->argent -= 10;
 
                 }
+
+            }
+
+        }
+    }
+}
+
+
+void affichageroute(Cases cases[35][45],ALLEGRO_BITMAP* imagesroute){
+
+    for (int i = 0; i < 35; i++) {
+        for (int j = 0; j < 45; j++) {
+            if(cases[i][j].routes==1){
+                al_draw_bitmap(imagesroute,XDepart+(j*20),YDepart+(i*20),0);
+
             }
 
         }
 
     }
-
 }
 
-void affichageroute(Cases cases[45][35],ALLEGRO_BITMAP* imagesroute){
-    for (int i = 0; i < 45; i++) {
-        for (int j = 0; j < 35; j++) {
-            if(cases[i][j].routes==1){
-                al_draw_bitmap(imagesroute,XDepart+(j*20),0+(i*20),0);
+
+
+void definirMaison(ALLEGRO_EVENT event,bool* habitations, Cases cases[35][45], Maire* maire) {
+
+    for (int i = 0; i < 35; ++i) {
+        for (int j = 0; j < 45; ++j) {
+
+
+
+            if (event.mouse.x >= XDepart + (j * 20) && event.mouse.x <= XDepart+20+(j*20) && event.mouse.y >= (i * 20) &&
+                event.mouse.y <= 20 + (i * 20)) {
+
+
+
+
+
+
+                if ( cases[i][j].routes == 0 && cases[i][j].maison == 0 &&
+                     cases[i][j].cabane == 0 && cases[i][j].immeuble == 0 && cases[i][j].gratteciel == 0 &&
+                     cases[i][j].centrale == 0 && cases[i][j].chateaudeau == 0) {
+                    cases[i][j].maison = 1;
+                    cases[i+1][j].maison = 1;
+                    cases[i+2][j].maison = 1;
+                    cases[i][j+1].maison = 1;
+                    cases[i][j+2].maison = 1;
+                    cases[i+1][j+1].maison = 1;
+                    cases[i+2][j+1].maison = 1;
+                    cases[i+1][j+2].maison = 1;
+                    cases[i+2][j+2].maison = 1;
+                    maire->argent -= 1000;
+
+                }
+
+            }
+
+        }
+    }
+}
+
+
+void affichageMaison(Cases cases[35][45],ALLEGRO_BITMAP* imagesmaisonplateau){
+
+    for (int i = 0; i < 35; i++) {
+        for (int j = 0; j < 45; j++) {
+            if(cases[i][j].maison==1){
+                al_draw_bitmap(imagesmaisonplateau,XDepart+(j*20),YDepart+(i*20),0);
                 al_flip_display();
+
             }
 
         }

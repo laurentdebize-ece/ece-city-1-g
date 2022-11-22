@@ -40,9 +40,9 @@ void dessinerplateau(){// fonction similaire a dessinerligne
     }
 }
 
-void inisitialisationcases(Cases cases[45][35]){
-    for (int i = 0; i < 45; ++i) {
-        for (int j = 0; j < 35; ++j) {
+void inisitialisationcases(Cases cases[35][45]){
+    for (int i = 0; i < 35; ++i) {
+        for (int j = 0; j < 45; ++j) {
             cases[i][j].obstacle=0;
             cases[i][j].ruines=0;
             cases[i][j].terrainvague=0;
@@ -51,10 +51,13 @@ void inisitialisationcases(Cases cases[45][35]){
             cases[i][j].immeuble=0;
             cases[i][j].gratteciel=0;
             cases[i][j].routes=0;
+            cases[i][j].centrale=0;
+            cases[i][j].chateaudeau=0;
 
         }
 
     }
+
 
 
 }
@@ -101,14 +104,4 @@ void detectioncaseSouris(ALLEGRO_EVENT event, int *x1, int *y1, int *x2, int *y2
 
 
 
-void affichageElmentSouris(ALLEGRO_EVENT event, int x1, int y1, int x2, int y2, bool curseur, bool routes, ALLEGRO_BITMAP* imageroutes){
-    if(curseur==true){
 
-    }
-    if(routes==true){
-
-    }
-
-
-
-}

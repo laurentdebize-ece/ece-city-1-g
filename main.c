@@ -10,7 +10,7 @@
 #include <allegro5/allegro_ttf.h>
 
 int main() {
-
+    bool jeu=true;
     bool etage0 = true;
     bool etage_1 = false;
     bool etage_2 = false;
@@ -21,11 +21,11 @@ int main() {
     int etage=0;
     int bouton=0;
 
-    bool curseur=1;
-    bool routes=0;
-    bool habitations=0;
-    bool centrale=0;
-    bool chateaudeau=0;
+    bool curseur=false;
+    bool routes=false;
+    bool habitations=false;
+    bool centrale=false;
+    bool chateaudeau=false;
 
 
     bool fin = false;
@@ -48,6 +48,7 @@ int main() {
     ALLEGRO_BITMAP *imageCentrale;
     ALLEGRO_BITMAP *imageMaison;
     ALLEGRO_BITMAP *imagecurseur;
+    ALLEGRO_BITMAP *imagemaisonplateau;
 
 
 
@@ -78,7 +79,10 @@ int main() {
 
     queue = al_create_event_queue();
     assert(queue != NULL);
-    Cases cases[45][35] = {0};
+
+    Cases cases[35][45]={0};
+
+
     fonts.font = al_load_ttf_font("../Fonts/police.ttf", 45, 0);
 
     fonts.font2 = al_load_ttf_font("../Fonts/police.ttf", 15, 0);
@@ -104,6 +108,7 @@ int main() {
     imageCentrale= al_load_bitmap("../images/centrale.png");
     imageChateaudeau= al_load_bitmap("../images/chateau.png");
     imagecurseur= al_load_bitmap("../images/curseur.png");
+    imagemaisonplateau= al_load_bitmap("../images/maisonplateau.png");
 
     Maire maire;
 
@@ -135,10 +140,16 @@ int main() {
             case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
                 Souris = true;
                 if (etatdebut || etatregles) {
-                    choixDebut(event.mouse.x, event.mouse.y, &etatdebut, &etatregles, timer2);}
-                    changementetage(event,&etage0,&etage_1,&etage_2,etage);
-                    detectionboutons(event,&curseur,&routes,&habitations,&centrale,&chateaudeau,bouton);
-                    definirRoutes(event,routes,cases,maire);
+                    choixDebut(event.mouse.x, event.mouse.y, &etatdebut, &etatregles, timer2);
+
+                }
+
+
+                    changementetage(event, &etage0, &etage_1, &etage_2, etage);
+                    detectionboutons(event, &curseur, &routes, &habitations, &centrale, &chateaudeau, bouton);
+                    definirRoutes(event, &routes, cases, &maire);
+                    definirMaison(event,&habitations,cases,&maire);
+
 
 
 
@@ -152,12 +163,12 @@ int main() {
 
                 break;
             case ALLEGRO_EVENT_TIMER :
-
+                affichageMaison(cases,imagemaisonplateau);
                 dessinerTout(&etatdebut, imagemenu, fonts, timer2, &etatregles, &maire, imagefond, imageville,
                              imageeau, &etage0, &etage_1, &etage_2, x1, x2, y1, y2, imageRoutes40x40, event,
-                             imageRoutes, etage, imageelec, imageMaison, imageCentrale, imageChateaudeau, imagecurseur,cases,&curseur,&routes,imageRoutes);
+                             imageRoutes, etage, imageelec, imageMaison, imageCentrale, imageChateaudeau, imagecurseur,cases,&curseur,&routes,imageRoutes,&jeu,imagemaisonplateau,&habitations);
 
-
+                al_flip_display();
                 break;
         }
     }

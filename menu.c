@@ -8,8 +8,8 @@
 
 void dessinerMenu(ALLEGRO_BITMAP * imagemenu, Fonts fonts,ALLEGRO_TIMER* timer2){
     al_draw_bitmap(imagemenu,0,0,0);
-    al_draw_filled_rectangle(400, 400, 600, 450, al_map_rgb(100, 100, 100));
-    al_draw_textf(fonts.font, al_map_rgb(255, 255, 255), 440, 400, 0, "JOUER");
+    al_draw_filled_rectangle(0, 700, 200, 750, al_map_rgb(100, 100, 100));
+    al_draw_textf(fonts.font, al_map_rgb(255, 255, 255), 40, 700, 0, "JOUER");
     al_draw_filled_rectangle(0, 20, 150, 70, al_map_rgb(100, 100, 100));
     al_draw_textf(fonts.font, al_map_rgb(255, 255, 255), 10, 25, 0, "REGLES");
 
@@ -36,12 +36,12 @@ void regles(Fonts fonts){
     al_draw_textf(fonts.font, al_map_rgb(255, 255, 255), 380, 465, 0,"BONNE CHANCE ! ");
 
 
-    al_draw_filled_rectangle(400, 600, 600, 650, al_map_rgb(100, 100, 100));
-    al_draw_textf(fonts.font, al_map_rgb(255, 255, 255), 440, 600, 0, "JOUER");
+    al_draw_filled_rectangle(400, 700, 600, 750, al_map_rgb(100, 100, 100));
+    al_draw_textf(fonts.font, al_map_rgb(255, 255, 255), 440, 700, 0, "JOUER");
 }
 
 void choixDebut(int x, int y,bool *etatDebut,bool *etatRegles, ALLEGRO_TIMER* timermenu){
-    if (((x > 400 && x < 600) && (y >400 && y < 450))||((x>400&&x<600)&&(y>600&&y<750))){
+    if (((x > 0 && x < 200) && (y >700 && y < 750))||((x>400&&x<600)&&(y>700&&y<750))){
         *etatDebut=false;
         *etatRegles=false;
         al_start_timer(timermenu);

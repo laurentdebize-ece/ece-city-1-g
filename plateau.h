@@ -12,7 +12,7 @@
 
 
 void dessinerLigne();
-void inisitialisationcases(Cases cases[45][35]);
+void inisitialisationcases(Cases cases[35][45]);
 
 void affichagetimer(Fonts fonts,ALLEGRO_TIMER* timer2);
 
