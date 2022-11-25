@@ -38,6 +38,7 @@ typedef struct{
     int ruines, terrainvague, cabane, maison, immeuble, gratteciel,centrale,chateaudeau;
     int obstacle;
     int routes;
+    int constructions;
 }Cases;
 
 typedef struct {

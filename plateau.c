@@ -54,6 +54,7 @@ void inisitialisationcases(Cases cases[35][45]){
             cases[i][j].centrale=0;
             cases[i][j].chateaudeau=0;
 
+
         }
 
     }
@@ -95,12 +96,17 @@ void detectioncaseSouris(ALLEGRO_EVENT event, int *x1, int *y1, int *x2, int *y2
 
     }
     if (event.mouse.x <= 124 || event.mouse.x >= 1024 || event.mouse.y <= 0 || event.mouse.y >= 700) {
-        *x1 = 10000000;
-        *x2 = 10000000;
-        *y1 = 10000000;
-        *y2 = 10000000;
+        *x1 = 0;
+        *x2 = 0;
+        *y1 = 0;
+        *y2 = 0;
     }
 }
+
+
+
+
+
 
 
 

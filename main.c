@@ -10,7 +10,7 @@
 #include <allegro5/allegro_ttf.h>
 
 int main() {
-    bool jeu=true;
+    bool jeu = true;
     bool etage0 = true;
     bool etage_1 = false;
     bool etage_2 = false;
@@ -18,14 +18,14 @@ int main() {
     int x2 = 0;
     int y1 = 0;
     int y2 = 0;
-    int etage=0;
-    int bouton=0;
+    int etage = 0;
+    int bouton = 0;
 
-    bool curseur=false;
-    bool routes=false;
-    bool habitations=false;
-    bool centrale=false;
-    bool chateaudeau=false;
+    bool curseur = true;
+    bool routes = false;
+    bool habitations = false;
+    bool centrale = false;
+    bool chateaudeau = false;
 
 
     bool fin = false;
@@ -49,8 +49,8 @@ int main() {
     ALLEGRO_BITMAP *imageMaison;
     ALLEGRO_BITMAP *imagecurseur;
     ALLEGRO_BITMAP *imagemaisonplateau;
-
-
+    ALLEGRO_BITMAP *imageChateaudeauGrande;
+    ALLEGRO_BITMAP *imageCentraleGrande;
 
 
     Fonts fonts;
@@ -80,7 +80,7 @@ int main() {
     queue = al_create_event_queue();
     assert(queue != NULL);
 
-    Cases cases[35][45]={0};
+    Cases cases[35][45] = {0};
 
 
     fonts.font = al_load_ttf_font("../Fonts/police.ttf", 45, 0);
@@ -101,18 +101,19 @@ int main() {
     imagefond = al_load_bitmap("../images/fond.png");
     imageville = al_load_bitmap("../images/ville.png");
     imageeau = al_load_bitmap("../images/eau.png");
-    imageelec= al_load_bitmap("../images/elec.png");
-    imageRoutes= al_load_bitmap("../images/textureRoutes.jpg");
-    imageRoutes40x40= al_load_bitmap("../images/textureRoutes40x40.jpg");
-    imageMaison= al_load_bitmap("../images/maison.png");
-    imageCentrale= al_load_bitmap("../images/centrale.png");
-    imageChateaudeau= al_load_bitmap("../images/chateau.png");
-    imagecurseur= al_load_bitmap("../images/curseur.png");
-    imagemaisonplateau= al_load_bitmap("../images/maisonplateau.png");
-
+    imageelec = al_load_bitmap("../images/elec.png");
+    imageRoutes = al_load_bitmap("../images/textureRoutes.jpg");
+    imageRoutes40x40 = al_load_bitmap("../images/textureRoutes40x40.jpg");
+    imageMaison = al_load_bitmap("../images/maison.png");
+    imageCentrale = al_load_bitmap("../images/centrale.png");
+    imageChateaudeau = al_load_bitmap("../images/chateau.png");
+    imagecurseur = al_load_bitmap("../images/curseur.png");
+    imagemaisonplateau = al_load_bitmap("../images/maisonplateau.png");
+    imageCentraleGrande = al_load_bitmap("../images/centralegrande.png");
+    imageChateaudeauGrande = al_load_bitmap("../images/chateaugrande.png");
     Maire maire;
 
-    inisitialisationcases(cases );
+    inisitialisationcases(cases);
     initialisationresource(&maire);
 
     al_start_timer(timer2);
@@ -144,13 +145,14 @@ int main() {
 
                 }
 
+                changementetage(event, &etage0, &etage_1, &etage_2, etage);
+                detectionboutons(event, &curseur, &routes, &habitations, &centrale, &chateaudeau, bouton);
+                definirRoutes(event, routes, cases, &maire);
+                definirMaison(event, habitations, cases, &maire);
 
-                    changementetage(event, &etage0, &etage_1, &etage_2, etage);
-                    detectionboutons(event, &curseur, &routes, &habitations, &centrale, &chateaudeau, bouton);
-                    definirRoutes(event, &routes, cases, &maire);
-                    definirMaison(event,&habitations,cases,&maire);
+                definirChateaudeau(event, chateaudeau, cases, &maire);
 
-
+                definircentrale(event, centrale, cases, &maire);
 
 
                 break;
@@ -160,15 +162,16 @@ int main() {
                 detectioncaseSouris(event, &x1, &y1, &x2, &y2);
 
 
-
                 break;
             case ALLEGRO_EVENT_TIMER :
-                affichageMaison(cases,imagemaisonplateau);
+
                 dessinerTout(&etatdebut, imagemenu, fonts, timer2, &etatregles, &maire, imagefond, imageville,
                              imageeau, &etage0, &etage_1, &etage_2, x1, x2, y1, y2, imageRoutes40x40, event,
-                             imageRoutes, etage, imageelec, imageMaison, imageCentrale, imageChateaudeau, imagecurseur,cases,&curseur,&routes,imageRoutes,&jeu,imagemaisonplateau,&habitations,&centrale,&chateaudeau);
+                             imageRoutes, etage, imageelec, imageMaison, imageCentrale, imageChateaudeau, imagecurseur,
+                             cases, &curseur, &routes, imageRoutes, &jeu, imagemaisonplateau, &habitations, &centrale,
+                             &chateaudeau, imageCentraleGrande, imageChateaudeauGrande);
 
-                al_flip_display();
+
                 break;
         }
     }
