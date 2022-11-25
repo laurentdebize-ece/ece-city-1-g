@@ -166,7 +166,7 @@ int main() {
                 affichageMaison(cases,imagemaisonplateau);
                 dessinerTout(&etatdebut, imagemenu, fonts, timer2, &etatregles, &maire, imagefond, imageville,
                              imageeau, &etage0, &etage_1, &etage_2, x1, x2, y1, y2, imageRoutes40x40, event,
-                             imageRoutes, etage, imageelec, imageMaison, imageCentrale, imageChateaudeau, imagecurseur,cases,&curseur,&routes,imageRoutes,&jeu,imagemaisonplateau,&habitations);
+                             imageRoutes, etage, imageelec, imageMaison, imageCentrale, imageChateaudeau, imagecurseur,cases,&curseur,&routes,imageRoutes,&jeu,imagemaisonplateau,&habitations,&centrale,&chateaudeau);
 
                 al_flip_display();
                 break;

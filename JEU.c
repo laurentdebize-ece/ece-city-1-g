@@ -15,7 +15,7 @@ void dessinerTout(bool *etatdebut, ALLEGRO_BITMAP *imagemenu, Fonts fonts, ALLEG
                   ALLEGRO_BITMAP *imageRoutes40x40, ALLEGRO_EVENT event, ALLEGRO_BITMAP *imageRoutes, int etage,
                   ALLEGRO_BITMAP *imageelec, ALLEGRO_BITMAP *imageMaison, ALLEGRO_BITMAP *imageCentrale,
                   ALLEGRO_BITMAP *imageChateaudeau, ALLEGRO_BITMAP *imagecurseur, Cases cases[35][45],bool* curseur, bool* routes,ALLEGRO_BITMAP* imageroutes,bool* jeu
-        ,ALLEGRO_BITMAP* imagemaisonplateau,bool* habitations) {
+        ,ALLEGRO_BITMAP* imagemaisonplateau,bool* habitations, bool* centrale, bool* chateaudeau) {
     al_clear_to_color(al_map_rgb(0, 0, 0));
 
     if (*etatdebut) {
@@ -41,6 +41,15 @@ void dessinerTout(bool *etatdebut, ALLEGRO_BITMAP *imagemenu, Fonts fonts, ALLEG
                 affichageMaison(cases,imagemaisonplateau);
 
             }
+            if(*centrale){
+                al_draw_filled_rectangle(x1,y1,x2+40,y2+40, al_map_rgb(255,0,0));
+
+
+            }
+            if(*chateaudeau){
+                al_draw_filled_rectangle(x1,y1,x2+40,y2+40, al_map_rgb(0,255,0));
+
+            }
 
             dessinerLigne();
             affichageroute(cases,imageRoutes);
@@ -54,15 +63,19 @@ void dessinerTout(bool *etatdebut, ALLEGRO_BITMAP *imagemenu, Fonts fonts, ALLEG
         else if(*etage_1){// niveau -1
             if(*curseur){
             al_draw_filled_rectangle(124,0,1024,700,al_map_rgb(0,0,0));
-            al_draw_filled_rectangle( x1, y1, x2, y2, al_map_rgb(150,150,150));
-            dessinerplateau();}
+
+            affichageeau(cases);
+            dessinerplateau();
+                al_draw_filled_rectangle( x1, y1, x2, y2, al_map_rgb(150,150,150));}
         }
 
         else { // niveau-2
             if(*curseur){
             al_draw_filled_rectangle(124,0,1024,700,al_map_rgb(0,0,50));
-            al_draw_filled_rectangle( x1, y1, x2, y2, al_map_rgb(150,150,150));
-            dessinerplateau();}
+            affichageelectricite(cases);
+            dessinerplateau();
+
+                al_draw_filled_rectangle( x1, y1, x2, y2, al_map_rgb(150,150,150));}
 
 
         }
@@ -206,9 +219,9 @@ void definirRoutes(ALLEGRO_EVENT event,bool* routes, Cases cases[35][45], Maire*
 
 
 
-                if ( cases[i][j].routes == 0 && cases[i][j].maison == 0 &&
+               /* if ( cases[i][j].routes == 0 && cases[i][j].maison == 0 &&
                     cases[i][j].cabane == 0 && cases[i][j].immeuble == 0 && cases[i][j].gratteciel == 0 &&
-                    cases[i][j].centrale == 0 && cases[i][j].chateaudeau == 0) {
+                    cases[i][j].centrale == 0 && cases[i][j].chateaudeau == 0) */{
 
                     cases[i][j].routes = 1;
                     maire->argent -= 10;
@@ -257,14 +270,7 @@ void definirMaison(ALLEGRO_EVENT event,bool* habitations, Cases cases[35][45], M
                      cases[i][j].cabane == 0 && cases[i][j].immeuble == 0 && cases[i][j].gratteciel == 0 &&
                      cases[i][j].centrale == 0 && cases[i][j].chateaudeau == 0) {
                     cases[i][j].maison = 1;
-                    cases[i+1][j].maison = 1;
-                    cases[i+2][j].maison = 1;
-                    cases[i][j+1].maison = 1;
-                    cases[i][j+2].maison = 1;
-                    cases[i+1][j+1].maison = 1;
-                    cases[i+2][j+1].maison = 1;
-                    cases[i+1][j+2].maison = 1;
-                    cases[i+2][j+2].maison = 1;
+
                     maire->argent -= 1000;
 
                 }
@@ -282,11 +288,35 @@ void affichageMaison(Cases cases[35][45],ALLEGRO_BITMAP* imagesmaisonplateau){
         for (int j = 0; j < 45; j++) {
             if(cases[i][j].maison==1){
                 al_draw_bitmap(imagesmaisonplateau,XDepart+(j*20),YDepart+(i*20),0);
-                al_flip_display();
+
 
             }
 
         }
 
+    }
+}
+
+void affichageeau(Cases cases [35][45]){
+
+    for (int i = 0; i < 35; i++) {
+        for (int j = 0; j < 45; j++) {
+            if(cases[i][j].routes==1){
+                al_draw_filled_rectangle(XDepart+(j*20),YDepart+(i*20),XDepart+20+(j*20),YDepart+20+(i*20), al_map_rgb(0,0,255));
+            }
+
+        }
+    }
+}
+
+void affichageelectricite(Cases cases [35][45]){
+
+    for (int i = 0; i < 35; i++) {
+        for (int j = 0; j < 45; j++) {
+            if(cases[i][j].routes==1){
+                al_draw_filled_rectangle(XDepart+(j*20),YDepart+(i*20),XDepart+20+(j*20),YDepart+20+(i*20), al_map_rgb(255,255,0));
+            }
+
+        }
     }
 }
