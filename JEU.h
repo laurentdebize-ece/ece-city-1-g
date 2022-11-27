@@ -16,9 +16,12 @@ void dessinerTout(bool *etatdebut, ALLEGRO_BITMAP *imagemenu, Fonts fonts, ALLEG
                   bool *etage0, bool *etage_1, bool *etage_2, int x1, int x2, int y1, int y2,
                   ALLEGRO_BITMAP *imageRoutes40x40, ALLEGRO_EVENT event, ALLEGRO_BITMAP *imageRoutes, int etage,
                   ALLEGRO_BITMAP *imageelec, ALLEGRO_BITMAP *imageMaison, ALLEGRO_BITMAP *imageCentrale,
-                  ALLEGRO_BITMAP *imageChateaudeau, ALLEGRO_BITMAP *imagecurseur, Cases cases [35][45],bool* curseur, bool* routes,ALLEGRO_BITMAP*imageroutes,bool* jeu,ALLEGRO_BITMAP* imagemaisonplateau,bool* habitations, bool* centrale, bool* chateaudeau, ALLEGRO_BITMAP* imagecentralegrande, ALLEGRO_BITMAP* imagechateaudeaugrand);
+                  ALLEGRO_BITMAP *imageChateaudeau, ALLEGRO_BITMAP *imagecurseur, Cases cases[35][45], bool *curseur,
+                  bool *routes, ALLEGRO_BITMAP *imageroutes, bool *jeu, ALLEGRO_BITMAP *imagemaisonplateau,
+                  bool *habitations, bool *centrale, bool *chateaudeau, ALLEGRO_BITMAP *imagecentralegrande,
+                  ALLEGRO_BITMAP *imagechateaudeaugrand, ALLEGRO_BITMAP* imagecabane, ALLEGRO_BITMAP* imageterrainvague, ALLEGRO_BITMAP* imageimmeuble, ALLEGRO_BITMAP* imagegratteciel);
 
-void changementetage(ALLEGRO_EVENT event,bool* etage0,bool* etage_1,bool* etage_2,int etage);
+        void changementetage(ALLEGRO_EVENT event,bool* etage0,bool* etage_1,bool* etage_2,int etage);
 void choixBoutons(ALLEGRO_EVENT event,int x1,int x2,int y1,int y2,ALLEGRO_BITMAP* imageRoutes, bool* etage0,bool* etage_1,bool* etage_2) ;
 void affichageroute(Cases cases[35][45],ALLEGRO_BITMAP* imagesroute);
 
@@ -37,6 +40,14 @@ void definircentrale(ALLEGRO_EVENT event, bool centrale, Cases cases[35][45], Ma
 void affichageCentrale(Cases cases[35][45], ALLEGRO_BITMAP *imagesCentralegrande) ;
 void affichageChateaudeau(Cases cases[35][45], ALLEGRO_BITMAP *imagechateaudeau) ;
 
+
+void affichageImmeuble(Cases cases [35][45],ALLEGRO_BITMAP* imagesimmeuble);
+void affichageCabane(Cases cases [35][45],ALLEGRO_BITMAP* imagescabane);
+void affichageGratteciel(Cases cases [35][45],ALLEGRO_BITMAP* imagesgratteciel);
+void affichageTerrainvague(Cases cases [35][45],ALLEGRO_BITMAP* iamgesterrainvague);
+void changementhabitations(ALLEGRO_TIMER* timer3,Cases cases [35][45],ALLEGRO_BITMAP* imagescabane,ALLEGRO_BITMAP*imageterrainvague, ALLEGRO_BITMAP*imagemaison, ALLEGRO_BITMAP*imageimmeuble, ALLEGRO_BITMAP* imagegratteciel);
+
+void affichagehabitations(Cases cases[35][45], ALLEGRO_BITMAP *imagesmaisonplateau,ALLEGRO_BITMAP* imagescabane,ALLEGRO_BITMAP* imagesterrainvague,ALLEGRO_BITMAP* imagesimmeuble,ALLEGRO_BITMAP* imagesgratteciel,Maire* maire) ;
 
 
 #endif //ECE_CITY_1_G1_JEU_H

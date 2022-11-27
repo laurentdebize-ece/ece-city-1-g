@@ -96,10 +96,10 @@ void detectioncaseSouris(ALLEGRO_EVENT event, int *x1, int *y1, int *x2, int *y2
 
     }
     if (event.mouse.x <= 124 || event.mouse.x >= 1024 || event.mouse.y <= 0 || event.mouse.y >= 700) {
-        *x1 = 0;
-        *x2 = 0;
-        *y1 = 0;
-        *y2 = 0;
+        *x1 = 1100000;
+        *x2 = 1100000;
+        *y1 = 1100000;
+        *y2 = 1100000;
     }
 }
 

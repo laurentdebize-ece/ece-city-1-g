@@ -17,7 +17,8 @@ void dessinerTout(bool *etatdebut, ALLEGRO_BITMAP *imagemenu, Fonts fonts, ALLEG
                   ALLEGRO_BITMAP *imageChateaudeau, ALLEGRO_BITMAP *imagecurseur, Cases cases[35][45], bool *curseur,
                   bool *routes, ALLEGRO_BITMAP *imageroutes, bool *jeu, ALLEGRO_BITMAP *imagemaisonplateau,
                   bool *habitations, bool *centrale, bool *chateaudeau, ALLEGRO_BITMAP *imagecentralegrande,
-                  ALLEGRO_BITMAP *imagechateaudeaugrand) {
+                  ALLEGRO_BITMAP *imagechateaudeaugrand, ALLEGRO_BITMAP *imagecabane, ALLEGRO_BITMAP *imageterrainvague,
+                  ALLEGRO_BITMAP *imageimmeuble, ALLEGRO_BITMAP *imagegratteciel) {
     al_clear_to_color(al_map_rgb(0, 0, 0));
 
     if (*etatdebut) {
@@ -36,17 +37,22 @@ void dessinerTout(bool *etatdebut, ALLEGRO_BITMAP *imagemenu, Fonts fonts, ALLEG
 
             dessinerLigne();
             affichageroute(cases, imageRoutes);
-            affichageMaison(cases, imagemaisonplateau);
+
+
+            affichagehabitations(cases, imagemaisonplateau, imagecabane, imageterrainvague, imageimmeuble,
+                                 imagegratteciel, maire);
+
             affichageCentrale(cases, imagecentralegrande);
-            affichageChateaudeau(cases,imagechateaudeaugrand);
-
-
+            affichageChateaudeau(cases, imagechateaudeaugrand);
+            affichageTerrainvague(cases, imageterrainvague);
+            affichageGratteciel(cases, imagegratteciel);
+            affichageImmeuble(cases, imageimmeuble);
+            affichageCabane(cases, imagecabane);
 
 
             if (*curseur) {
+
                 al_draw_filled_rectangle(x1, y1, x2, y2, al_map_rgb(0, 0, 0));
-
-
 
 
             }
@@ -54,10 +60,9 @@ void dessinerTout(bool *etatdebut, ALLEGRO_BITMAP *imagemenu, Fonts fonts, ALLEG
                 al_draw_bitmap(imageroutes, x1, y1, 0);
 
 
-
             }
             if (*habitations) {
-                al_draw_bitmap(imagemaisonplateau, x1, y1, 0);
+                al_draw_bitmap(imageterrainvague, x1, y1, 0);
 
 
             }
@@ -73,20 +78,20 @@ void dessinerTout(bool *etatdebut, ALLEGRO_BITMAP *imagemenu, Fonts fonts, ALLEG
 
         } else if (*etage_1) {// niveau -1
 
-                al_draw_filled_rectangle(124, 0, 1024, 700, al_map_rgb(0, 0, 0));
+            al_draw_filled_rectangle(124, 0, 1024, 700, al_map_rgb(0, 0, 0));
+            dessinerplateau();
+            affichageeau(cases);
 
-                affichageeau(cases);
-                dessinerplateau();
-                al_draw_filled_rectangle(x1, y1, x2, y2, al_map_rgb(150, 150, 150));
+            al_draw_filled_rectangle(x1, y1, x2, y2, al_map_rgb(150, 150, 150));
 
         } else { // niveau-2
 
-                al_draw_filled_rectangle(124, 0, 1024, 700, al_map_rgb(0, 0, 50));
-                affichageelectricite(cases);
-                dessinerplateau();
+            al_draw_filled_rectangle(124, 0, 1024, 700, al_map_rgb(0, 0, 50));
+            dessinerplateau();
 
-                al_draw_filled_rectangle(x1, y1, x2, y2, al_map_rgb(150, 150, 150));
+            affichageelectricite(cases);
 
+            al_draw_filled_rectangle(x1, y1, x2, y2, al_map_rgb(150, 150, 150));
 
 
         }
@@ -99,7 +104,8 @@ void dessinerTout(bool *etatdebut, ALLEGRO_BITMAP *imagemenu, Fonts fonts, ALLEG
                         imageChateaudeau, imagecurseur);
 
 
-    }al_flip_display();
+    }
+    al_flip_display();
 
 
 }
@@ -107,7 +113,7 @@ void dessinerTout(bool *etatdebut, ALLEGRO_BITMAP *imagemenu, Fonts fonts, ALLEG
 void initialisationresource(Maire *maire) {
     maire->argent = 500000;
     maire->capacites = 0;
-    maire->habitants = 1;
+    maire->habitants = 0;
 
 
 }
@@ -242,18 +248,17 @@ void definirRoutes(ALLEGRO_EVENT event, bool routes, Cases cases[35][45], Maire 
                 event.mouse.y <= 20 + (i * 20)) {
 
 
+                if (routes == true && cases[i][j].routes == 0 && cases[i][j].maison == 0 &&
+                    cases[i][j].cabane == 0 && cases[i][j].immeuble == 0 && cases[i][j].gratteciel == 0 &&
+                    cases[i][j].centrale == 0 && cases[i][j].chateaudeau == 0) {
+                    if (cases[i][j].constructions == 0) {
 
+                        cases[i][j].routes = 1;
+                        cases[i][j].constructions = 1;
 
+                        maire->argent -= 10;
+                    }
 
-
-                /* if ( cases[i][j].routes == 0 && cases[i][j].maison == 0 &&
-                     cases[i][j].cabane == 0 && cases[i][j].immeuble == 0 && cases[i][j].gratteciel == 0 &&
-                     cases[i][j].centrale == 0 && cases[i][j].chateaudeau == 0) */if(routes==true){
-
-                    cases[i][j].routes = 1;
-                    cases[i][j].constructions = 1;
-
-                    maire->argent -= 10;
 
                 }
 
@@ -290,40 +295,84 @@ void definirMaison(ALLEGRO_EVENT event, bool habitations, Cases cases[35][45], M
                 event.mouse.y <= 20 + (i * 20)) {
 
 
-                if (habitations==true && cases[i][j].routes == 0 && cases[i][j].maison == 0 &&
+                if (habitations == true && cases[i][j].routes == 0 && cases[i][j].maison == 0 &&
                     cases[i][j].cabane == 0 && cases[i][j].immeuble == 0 && cases[i][j].gratteciel == 0 &&
                     cases[i][j].centrale == 0 && cases[i][j].chateaudeau == 0) {
+                    if (cases[i][j].constructions == 0 &&
+                        cases[i + 1][j].constructions == 0 && cases[i + 2][j].constructions == 0 &&
+                        cases[i + 2][j + 1].constructions == 0 && cases[i][j + 1].constructions == 0 &&
+                        cases[i + 1][j + 1].constructions == 0 && cases[i + 1][j + 2].constructions == 0 &&
+                        cases[i][j + 2].constructions == 0 && cases[i + 2][j + 2].constructions == 0) {
 
-                    cases[i][j].maison = 1;
-                    for (int k = j; k < 2; ++k) {
-                        for (int l = i; l < 2; ++l) {
-                            cases[k][l].constructions = 1;
 
-                        }
-
+                        cases[i][j].habitations = 1;
+                        cases[i][j].constructions = 1;
+                        cases[i + 1][j].constructions = 1;
+                        cases[i + 2][j].constructions = 1;
+                        cases[i + 2][j + 1].constructions = 1;
+                        cases[i][j + 1].constructions = 1;
+                        cases[i + 1][j + 1].constructions = 1;
+                        cases[i + 1][j + 2].constructions = 1;
+                        cases[i][j + 2].constructions = 1;
+                        cases[i + 2][j + 2].constructions = 1;
                     }
 
 
-                    maire->argent -= 1000;
-
                 }
+                if (cases[i][j].niveaubatiment == 1 ) {
+                    maire->habitants += 10;
+                }
+                if (cases[i][j].niveaubatiment == 2) {
+                    maire->habitants += 40;
+                }
+                if (cases[i][j].niveaubatiment == 3) {
+                    maire->habitants += 50;
+                }
+                if (cases[i][j].niveaubatiment == 4) {
+                    maire->habitants += 900;
+                }
+
+
+                maire->argent -= 1000;
 
             }
 
         }
+
     }
 }
 
 
-void affichageMaison(Cases cases[35][45], ALLEGRO_BITMAP *imagesmaisonplateau) {
-
+void affichagehabitations(Cases cases[35][45], ALLEGRO_BITMAP *imagesmaisonplateau, ALLEGRO_BITMAP *imagescabane,
+                          ALLEGRO_BITMAP *imagesterrainvague, ALLEGRO_BITMAP *imagesimmeuble,
+                          ALLEGRO_BITMAP *imagesgratteciel, Maire *maire) {
     for (int i = 0; i < 35; i++) {
         for (int j = 0; j < 45; j++) {
-            if (cases[i][j].maison == 1) {
-                al_draw_bitmap(imagesmaisonplateau, XDepart + (j * 20), YDepart + (i * 20), 0);
+            if (cases[i][j].habitations == 1) {
+
+                if (cases[i][j].niveaubatiment == 0) {
+                    al_draw_bitmap(imagesterrainvague, XDepart + (j * 20), YDepart + (i * 20), 0);
+
+
+                }
+                if (cases[i][j].niveaubatiment == 1) {
+                    al_draw_bitmap(imagescabane, XDepart + (j * 20), YDepart + (i * 20), 0);
+
+
+                }
+                if (cases[i][j].niveaubatiment == 2) {
+                    al_draw_bitmap(imagesmaisonplateau, XDepart + (j * 20), YDepart + (i * 20), 0);
+                }
+                if (cases[i][j].niveaubatiment == 3) {
+                    al_draw_bitmap(imagesimmeuble, XDepart + (j * 20), YDepart + (i * 20), 0);
+                }
+                if (cases[i][j].niveaubatiment == 4) {
+                    al_draw_bitmap(imagesgratteciel, XDepart + (j * 20), YDepart + (i * 20), 0);
+                }
 
 
             }
+
 
         }
 
@@ -366,13 +415,12 @@ void verificationcases(Cases cases[35][45]) {
 
             }
 
-
+//= cases
         }
     }
 
 
 }
-
 
 
 void definircentrale(ALLEGRO_EVENT event, bool centrale, Cases cases[35][45], Maire *maire) {
@@ -386,28 +434,75 @@ void definircentrale(ALLEGRO_EVENT event, bool centrale, Cases cases[35][45], Ma
                 event.mouse.y <= 20 + (i * 20)) {
 
 
-                if (centrale==true && cases[i][j].routes == 0 && cases[i][j].maison == 0 &&
+                if (centrale == true && cases[i][j].routes == 0 && cases[i][j].maison == 0 &&
                     cases[i][j].cabane == 0 && cases[i][j].immeuble == 0 && cases[i][j].gratteciel == 0 &&
                     cases[i][j].centrale == 0 && cases[i][j].chateaudeau == 0) {
+                    if (cases[i][j].constructions == 0 &&
+                        cases[i + 1][j].constructions == 0 && cases[i + 2][j].constructions == 0 &&
+                        cases[i + 2][j + 1].constructions == 0 && cases[i][j + 1].constructions == 0 &&
+                        cases[i + 1][j + 1].constructions == 0 && cases[i + 1][j + 2].constructions == 0 &&
+                        cases[i][j + 2].constructions == 0 && cases[i + 2][j + 2].constructions == 0 &&
+                        cases[i + 3][j].constructions == 0 && cases[i + 3][j + 1].constructions == 0 &&
+                        cases[i + 3][j + 2].constructions == 0 && cases[i + 3][j + 3].constructions == 0 &&
+                        cases[i + 3][j + 4].constructions == 0 && cases[i][j + 4].constructions == 0 &&
+                        cases[i + 2][j + 4].constructions == 0 && cases[i][j + 5].constructions == 0 &&
+                        cases[i + 1][j + 5].constructions == 0 && cases[i + 2][j + 5].constructions == 0 &&
+                        cases[i + 3][j + 5].constructions == 0 && cases[i + 1][j + 3].constructions == 0 &&
+                        cases[i + 2][j + 3].constructions == 0 && cases[i + 1][j + 4].constructions == 0 &&
+                        cases[i][j + 3].constructions == 0) {
 
-                    cases[i][j].centrale = 1;
-                    for (int k = j; k < 3; ++k) {
-                        for (int l = i; l < 2; ++l) {
-                            cases[k][l].constructions = 1;
+
+                        cases[i][j].centrale = 0;
+                        cases[i][j].constructions = 1;
+                        cases[i + 1][j].constructions = 1;
+                        cases[i + 2][j].constructions = 1;
+                        cases[i + 2][j + 1].constructions = 1;
+                        cases[i][j + 1].constructions = 1;
+                        cases[i + 1][j + 1].constructions = 1;
+                        cases[i + 1][j + 2].constructions = 1;
+                        cases[i][j + 2].constructions = 1;
+                        cases[i + 2][j + 2].constructions = 1;
+                        cases[i + 3][j].constructions = 1;
+                        cases[i + 3][j + 1].constructions = 1;
+                        cases[i + 3][j + 2].constructions = 1;
+                        cases[i + 3][j + 3].constructions = 1;
+                        cases[i + 3][j + 4].constructions = 1;
+                        cases[i][j + 4].constructions = 1;
+                        cases[i + 2][j + 4].constructions = 1;
+                        cases[i][j + 5].constructions = 1;
+                        cases[i + 1][j + 5].constructions = 1;
+                        cases[i + 2][j + 5].constructions = 1;
+                        cases[i + 3][j + 5].constructions = 1;
+                        cases[i + 1][j + 3].constructions = 1;
+                        cases[i + 2][j + 3].constructions = 1;
+                        cases[i + 1][j + 4].constructions = 1;
+                        cases[i][j + 3].constructions = 1;
+
+
+                        if (maire->argent >= 100000) {
+                            cases[i][j].centrale = 1;
+                            maire->capacites += 1000;
+                            maire->argent -= 100000;
+
 
                         }
-
                     }
 
 
-                    maire->argent -= 1000; // prix a verifier
+
+
+                    // prix a verifier
+
+
+
 
                 }
 
             }
-
         }
+
     }
+
 }
 
 
@@ -422,28 +517,75 @@ void definirChateaudeau(ALLEGRO_EVENT event, bool chateaudeau, Cases cases[35][4
                 event.mouse.y <= 20 + (i * 20)) {
 
 
-                if (chateaudeau==true && cases[i][j].routes == 0 && cases[i][j].maison == 0 &&
+                if (chateaudeau == true && cases[i][j].routes == 0 && cases[i][j].maison == 0 &&
                     cases[i][j].cabane == 0 && cases[i][j].immeuble == 0 && cases[i][j].gratteciel == 0 &&
                     cases[i][j].centrale == 0 && cases[i][j].chateaudeau == 0) {
+                    if (cases[i][j].constructions == 0 &&
+                        cases[i + 1][j].constructions == 0 && cases[i + 2][j].constructions == 0 &&
+                        cases[i + 2][j + 1].constructions == 0 && cases[i][j + 1].constructions == 0 &&
+                        cases[i + 1][j + 1].constructions == 0 && cases[i + 1][j + 2].constructions == 0 &&
+                        cases[i][j + 2].constructions == 0 && cases[i + 2][j + 2].constructions == 0 &&
+                        cases[i + 3][j].constructions == 0 && cases[i + 3][j + 1].constructions == 0 &&
+                        cases[i + 3][j + 2].constructions == 0 && cases[i + 3][j + 3].constructions == 0 &&
+                        cases[i + 3][j + 4].constructions == 0 && cases[i][j + 4].constructions == 0 &&
+                        cases[i + 2][j + 4].constructions == 0 && cases[i][j + 5].constructions == 0 &&
+                        cases[i + 1][j + 5].constructions == 0 && cases[i + 2][j + 5].constructions == 0 &&
+                        cases[i + 3][j + 5].constructions == 0 && cases[i + 1][j + 3].constructions == 0 &&
+                        cases[i + 2][j + 3].constructions == 0 && cases[i + 1][j + 4].constructions == 0 &&
+                        cases[i][j + 3].constructions == 0) {
 
-                    cases[i][j].chateaudeau = 1;
-                    for (int k = j; k < 3; ++k) {
-                        for (int l = i; l < 2; ++l) {
-                            cases[k][l].constructions = 1;
+
+                        cases[i][j].chateaudeau = 0;
+                        cases[i][j].constructions = 1;
+                        cases[i + 1][j].constructions = 1;
+                        cases[i + 2][j].constructions = 1;
+                        cases[i + 2][j + 1].constructions = 1;
+                        cases[i][j + 1].constructions = 1;
+                        cases[i + 1][j + 1].constructions = 1;
+                        cases[i + 1][j + 2].constructions = 1;
+                        cases[i][j + 2].constructions = 1;
+                        cases[i + 2][j + 2].constructions = 1;
+                        cases[i + 3][j].constructions = 1;
+                        cases[i + 3][j + 1].constructions = 1;
+                        cases[i + 3][j + 2].constructions = 1;
+                        cases[i + 3][j + 3].constructions = 1;
+                        cases[i + 3][j + 4].constructions = 1;
+                        cases[i][j + 4].constructions = 1;
+                        cases[i + 2][j + 4].constructions = 1;
+                        cases[i][j + 5].constructions = 1;
+                        cases[i + 1][j + 5].constructions = 1;
+                        cases[i + 2][j + 5].constructions = 1;
+                        cases[i + 3][j + 5].constructions = 1;
+                        cases[i + 1][j + 3].constructions = 1;
+                        cases[i + 2][j + 3].constructions = 1;
+                        cases[i + 1][j + 4].constructions = 1;
+                        cases[i][j + 3].constructions = 1;
+
+
+                        if (maire->argent >= 100000) {
+                            cases[i][j].chateaudeau = 1;
+                            maire->capacites += 1000;
+                            maire->argent -= 100000;
+
 
                         }
-
                     }
 
 
-                    maire->argent -= 1000;
+
+
+                    // prix a verifier
+
+
+
 
                 }
 
             }
-
         }
+
     }
+
 }
 
 
@@ -473,6 +615,50 @@ void affichageChateaudeau(Cases cases[35][45], ALLEGRO_BITMAP *imagechateaudeau)
 
             }
 
+        }
+
+    }
+}
+
+void affichageTerrainvague(Cases cases[35][45], ALLEGRO_BITMAP *iamgesterrainvague) {
+    for (int i = 0; i < 35; ++i) {
+        for (int j = 0; j < 45; ++j) {
+            if (cases[i][j].terrainvague == 1) {
+                al_draw_bitmap(iamgesterrainvague, XDepart + (j * 20), YDepart + (i * 20), 0);
+            }
+        }
+
+    }
+}
+
+void affichageImmeuble(Cases cases[35][45], ALLEGRO_BITMAP *imagesimmeuble) {
+    for (int i = 0; i < 35; ++i) {
+        for (int j = 0; j < 45; ++j) {
+            if (cases[i][j].immeuble == 1) {
+                al_draw_bitmap(imagesimmeuble, XDepart + (j * 20), YDepart + (i * 20), 0);
+            }
+        }
+
+    }
+}
+
+void affichageGratteciel(Cases cases[35][45], ALLEGRO_BITMAP *imagesgratteciel) {
+    for (int i = 0; i < 35; ++i) {
+        for (int j = 0; j < 45; ++j) {
+            if (cases[i][j].gratteciel == 1) {
+                al_draw_bitmap(imagesgratteciel, XDepart + (j * 20), YDepart + (i * 20), 0);
+            }
+        }
+
+    }
+}
+
+void affichageCabane(Cases cases[35][45], ALLEGRO_BITMAP *imagescabane) {
+    for (int i = 0; i < 35; ++i) {
+        for (int j = 0; j < 45; ++j) {
+            if (cases[i][j].cabane == 1) {
+                al_draw_bitmap(imagescabane, XDepart + (j * 20), YDepart + (i * 20), 0);
+            }
         }
 
     }

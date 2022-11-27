@@ -39,6 +39,9 @@ typedef struct{
     int obstacle;
     int routes;
     int constructions;
+    int niveaubatiment;
+    int habitations;
+    int habitants;
 }Cases;
 
 typedef struct {

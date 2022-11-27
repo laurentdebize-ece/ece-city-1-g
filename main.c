@@ -20,6 +20,9 @@ int main() {
     int y2 = 0;
     int etage = 0;
     int bouton = 0;
+    int compteur = 0;
+    int timer = 0;
+
 
     bool curseur = true;
     bool routes = false;
@@ -37,6 +40,7 @@ int main() {
     ALLEGRO_TIMER *timer1 = NULL;
     ALLEGRO_TIMER *timer2 = NULL;
 
+
     ALLEGRO_BITMAP *imagemenu;
     ALLEGRO_BITMAP *imagefond;
     ALLEGRO_BITMAP *imageville;
@@ -51,6 +55,10 @@ int main() {
     ALLEGRO_BITMAP *imagemaisonplateau;
     ALLEGRO_BITMAP *imageChateaudeauGrande;
     ALLEGRO_BITMAP *imageCentraleGrande;
+    ALLEGRO_BITMAP *imageImmeuble;
+    ALLEGRO_BITMAP *imageCabane;
+    ALLEGRO_BITMAP *imageGratteciel;
+    ALLEGRO_BITMAP *imageTerrainvague;
 
 
     Fonts fonts;
@@ -109,8 +117,14 @@ int main() {
     imageChateaudeau = al_load_bitmap("../images/chateau.png");
     imagecurseur = al_load_bitmap("../images/curseur.png");
     imagemaisonplateau = al_load_bitmap("../images/maisonplateau.png");
-    imageCentraleGrande = al_load_bitmap("../images/centralegrande.png");
-    imageChateaudeauGrande = al_load_bitmap("../images/chateaugrande.png");
+    imageCentraleGrande = al_load_bitmap("../images/electricity .png");
+    imageChateaudeauGrande = al_load_bitmap("../images/chateaudeau.png");
+    imageImmeuble = al_load_bitmap("../images/immeuble.png");
+    imageCabane = al_load_bitmap("../images/cabane.png");
+    imageGratteciel = al_load_bitmap("../images/gratteciel.png");
+    imageTerrainvague = al_load_bitmap("../images/terrainvague.png");
+
+
     Maire maire;
 
     inisitialisationcases(cases);
@@ -147,12 +161,21 @@ int main() {
 
                 changementetage(event, &etage0, &etage_1, &etage_2, etage);
                 detectionboutons(event, &curseur, &routes, &habitations, &centrale, &chateaudeau, bouton);
-                definirRoutes(event, routes, cases, &maire);
-                definirMaison(event, habitations, cases, &maire);
+                if (routes) {
+                    definirRoutes(event, routes, cases, &maire);
+                }
+                if (habitations) {
+                    definirMaison(event, habitations, cases, &maire);
+                }
+                if (chateaudeau) {
 
-                definirChateaudeau(event, chateaudeau, cases, &maire);
+                    definirChateaudeau(event, chateaudeau, cases, &maire);
+                }
 
-                definircentrale(event, centrale, cases, &maire);
+                if (centrale) {
+
+                    definircentrale(event, centrale, cases, &maire);
+                }
 
 
                 break;
@@ -164,12 +187,59 @@ int main() {
 
                 break;
             case ALLEGRO_EVENT_TIMER :
+                compteur += 1;
+                if (compteur % 100 == 0) {
+                    timer++;
+                    if (timer % 5 == 0) {
+
+                        for (int i = 0; i < 35; ++i) {
+                            for (int j = 0; j < 45; ++j) {
+                                if (cases[i][j].habitations == 1) {
+                                    if (cases[i][j].niveaubatiment < 4) {
+                                        cases[i][j].niveaubatiment += 1;
+
+                                        switch (cases[i][j].niveaubatiment) {
+                                            case 0 :
+                                                maire.habitants += 0;
+                                                cases[i][j].habitants = 0;
+                                                break;
+                                            case 1 :
+                                                maire.habitants += 10;
+                                                cases[i][j].habitants = 10;
+                                                maire.argent+= 10 * cases[i][j].habitants;
+                                                break;
+
+                                            case 2 :
+                                                maire.habitants += 40;
+                                                cases[i][j].habitants = 50;
+                                                maire.argent+= 10 * cases[i][j].habitants;
+                                                break;
+                                            case 3 :
+                                                maire.habitants += 50;
+                                                cases[i][j].habitants = 100;
+                                                maire.argent+= 10 * cases[i][j].habitants;
+                                                break;
+                                            case 4 :
+                                                maire.habitants += 900;
+                                                cases[i][j].habitants = 1000;
+                                                maire.argent+= 10 * cases[i][j].habitants;
+                                                break;
+                                        }
+                                    }
+                                }
+
+                            }
+
+                        }
+                    }
+                }
 
                 dessinerTout(&etatdebut, imagemenu, fonts, timer2, &etatregles, &maire, imagefond, imageville,
                              imageeau, &etage0, &etage_1, &etage_2, x1, x2, y1, y2, imageRoutes40x40, event,
                              imageRoutes, etage, imageelec, imageMaison, imageCentrale, imageChateaudeau, imagecurseur,
                              cases, &curseur, &routes, imageRoutes, &jeu, imagemaisonplateau, &habitations, &centrale,
-                             &chateaudeau, imageCentraleGrande, imageChateaudeauGrande);
+                             &chateaudeau, imageCentraleGrande, imageChateaudeauGrande, imageCabane, imageTerrainvague,
+                             imageImmeuble, imageGratteciel);
 
 
                 break;
